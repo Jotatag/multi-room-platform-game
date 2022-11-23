@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import * as Styles from './styles';
 
-import Player from '../../dtos/player';
+import PlayerDTO from '../../dtos/player';
 
 const Canvas = (props) => {
     const canvasRef = useRef(null);
@@ -14,7 +14,7 @@ const Canvas = (props) => {
         canvasInstance.width = 64 * 16;
         canvasInstance.height = 64 * 9;
 
-        const player = new Player(canvasInstance);
+        const player = new PlayerDTO(canvasInstance);
 
         const animate = () => {
             window.requestAnimationFrame(animate);
