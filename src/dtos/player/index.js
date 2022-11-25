@@ -1,7 +1,8 @@
+import C from '../../services/canvas';
 import { keyDown, keyUp } from '../../services/eventListeners';
 
 class PlayerDTO {
-    constructor(canvasInstance) {
+    constructor() {
         this.position = {
             x: 100,
             y: 100
@@ -12,15 +13,13 @@ class PlayerDTO {
             y: 0
         }
         this.gravity = 0.2;
+        this.runSpeed = 2;
 
         this.width = 100;
         this.height = 100;
         this.sides = {
             bottom: this.position.y + this.height
         }
-        
-        this.canvasInstance = canvasInstance;
-        this.canvasContext = this.canvasInstance.getContext('2d');
 
         this.switchCase =
             (obj) =>
@@ -31,27 +30,27 @@ class PlayerDTO {
         this.movements = {
             'w': {
                 'action': 'jump',
-                'start': () => {
+                'down': () => {
                     if (this.velocity.y !== 0) return;
                     this.velocity.y = -10;
                 },
-                'stop': () => {}
+                'up': () => {}
             },
             'a': {
                 'action': 'left',
                 'pressed': false,
-                'start': () => { this.movements.a.pressed = true },
-                'stop': () => { this.movements.a.pressed = false }
+                'down': () => { this.movements.a.pressed = true },
+                'up': () => { this.movements.a.pressed = false }
             },
             'd': {
                 'action': 'right',
                 'pressed': false,
-                'start': () => { this.movements.d.pressed = true },
-                'stop': () => { this.movements.d.pressed = false }
+                'down': () => { this.movements.d.pressed = true },
+                'up': () => { this.movements.d.pressed = false }
             },
             '_default': {
-                'start': () => {},
-                'stop': () => {}
+                'down': () => {},
+                'up': () => {}
             }
         }
         this.bindMovements();
@@ -59,11 +58,11 @@ class PlayerDTO {
 
     draw() {
         this.velocity.x = 0;
-        if(this.movements.d.pressed) this.velocity.x = 2;
-        else if(this.movements.a.pressed) this.velocity.x = -2;
+        if(this.movements.d.pressed) this.velocity.x = Math.abs(this.runSpeed);
+        else if(this.movements.a.pressed) this.velocity.x = -Math.abs(this.runSpeed);
 
-        this.canvasContext.fillStyle = 'red';
-        this.canvasContext.fillRect(this.position.x, this.position.y, this.width, this.height);
+        C.getCanvasContext().fillStyle = 'red';
+        C.getCanvasContext().fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 
     update() {
@@ -71,7 +70,7 @@ class PlayerDTO {
         this.position.y += this.velocity.y;
         this.sides.bottom = this.position.y + this.height;
 
-        if(this.sides.bottom + this.velocity.y < this.canvasInstance.height) {
+        if(this.sides.bottom + this.velocity.y < C.getCanvasInstance().height) {
             this.velocity.y += this.gravity;
         } else this.velocity.y = 0;
     }
@@ -80,11 +79,11 @@ class PlayerDTO {
         const getKey = this.switchCase(this.movements);
 
         keyDown((key) => {
-            getKey(key).start();
+            getKey(key).down();
         });
 
         keyUp((key) => {
-            getKey(key).stop();
+            getKey(key).up();
         });
     }
 }

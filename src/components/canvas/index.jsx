@@ -2,24 +2,25 @@ import React, { useEffect, useRef } from 'react';
 
 import * as Styles from './styles';
 
+import C from '../../services/canvas';
+
 import PlayerDTO from '../../dtos/player';
+import { Level1 } from '../../services/getLevels';
 
 const Canvas = (props) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        const canvasInstance = canvasRef.current;
-        const canvasContext = canvasInstance.getContext('2d');
+        C.setCanvasInstance(canvasRef.current);
 
-        canvasInstance.width = 64 * 16;
-        canvasInstance.height = 64 * 9;
+        C.getCanvasInstance().width = 64 * 16;
+        C.getCanvasInstance().height = 64 * 9;
 
-        const player = new PlayerDTO(canvasInstance);
+        const player = new PlayerDTO();
 
         const animate = () => {
             window.requestAnimationFrame(animate);
-            canvasContext.fillStyle = 'white';
-            canvasContext.fillRect(0, 0, 1024, 576);
+            Level1.draw();
             
             player.draw();
             player.update();
