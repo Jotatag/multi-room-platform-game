@@ -1,3 +1,4 @@
+import C from '../../services/canvas';
 import SpriteDTO from '../sprite';
 import { keyDown, keyUp } from '../../services/eventListeners';
 
@@ -66,9 +67,29 @@ class PlayerDTO extends SpriteDTO {
     update() {
         this.position.x += this.velocity.x;
 
+        this.updateHitBox();
         this.checkForHorizontalCollision();
         this.applyGravity();
+
+        this.updateHitBox();
+        /* C.getCanvasContext().fillRect(
+            this.hitBox.position.x,
+            this.hitBox.position.y,
+            this.hitBox.width,
+            this.hitBox.height
+        ); */
         this.checkForVerticalCollision();
+    }
+
+    updateHitBox() {
+        this.hitBox = {
+            position: {
+                x: this.position.x + 58,
+                y: this.position.y + 33
+            },
+            width: 50,
+            height: 55
+        };
     }
 
     applyGravity() {
@@ -80,18 +101,20 @@ class PlayerDTO extends SpriteDTO {
         for(let i = 0; i < this.collisionBlocks.length; i++){
             const collisionBlock = this.collisionBlocks[i];
             if(
-                this.position.x <= collisionBlock.position.x + collisionBlock.width &&
-                this.position.x + this.width >= collisionBlock.position.x &&
-                this.position.y + this.height >= collisionBlock.position.y &&
-                this.position.y <= collisionBlock.position.y + collisionBlock.height
+                this.hitBox.position.x <= collisionBlock.position.x + collisionBlock.width &&
+                this.hitBox.position.x + this.hitBox.width >= collisionBlock.position.x &&
+                this.hitBox.position.y + this.hitBox.height >= collisionBlock.position.y &&
+                this.hitBox.position.y <= collisionBlock.position.y + collisionBlock.height
             ) {
                 if(this.velocity.x < 0) {
-                    this.position.x = collisionBlock.position.x + collisionBlock.width + 0.01;
+                    const offSet = this.hitBox.position.x - this.position.x;
+                    this.position.x = collisionBlock.position.x + collisionBlock.width - offSet + 0.01;
                     break;
                 }
 
                 if(this.velocity.x > 0) {
-                    this.position.x = collisionBlock.position.x - this.width - 0.01;
+                    const offSet = this.hitBox.position.x - this.position.x + this.hitBox.width;
+                    this.position.x = collisionBlock.position.x - offSet - 0.01;
                     break;
                 }
             }
@@ -102,20 +125,22 @@ class PlayerDTO extends SpriteDTO {
         for(let i = 0; i < this.collisionBlocks.length; i++){
             const collisionBlock = this.collisionBlocks[i];
             if(
-                this.position.x <= collisionBlock.position.x + collisionBlock.width &&
-                this.position.x + this.width >= collisionBlock.position.x &&
-                this.position.y + this.height >= collisionBlock.position.y &&
-                this.position.y <= collisionBlock.position.y + collisionBlock.height 
+                this.hitBox.position.x <= collisionBlock.position.x + collisionBlock.width &&
+                this.hitBox.position.x + this.hitBox.width >= collisionBlock.position.x &&
+                this.hitBox.position.y + this.hitBox.height >= collisionBlock.position.y &&
+                this.hitBox.position.y <= collisionBlock.position.y + collisionBlock.height 
             ) {
                 if(this.velocity.y < 0) {
                     this.velocity.y = 0;
-                    this.position.y = collisionBlock.position.y + collisionBlock.height + 0.01;
+                    const offSet = this.hitBox.position.y - this.position.y;
+                    this.position.y = collisionBlock.position.y + collisionBlock.height - offSet + 0.01;
                     break;
                 }
 
                 if(this.velocity.y > 0) {
                     this.velocity.y = 0;
-                    this.position.y = collisionBlock.position.y - this.height - 0.01;
+                    const offSet = this.hitBox.position.y - this.position.y + this.hitBox.height;
+                    this.position.y = collisionBlock.position.y - offSet - 0.01;
                     break;
                 }
             }
