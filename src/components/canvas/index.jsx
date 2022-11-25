@@ -4,6 +4,8 @@ import * as Styles from './styles';
 
 import C from '../../services/canvas';
 
+import PlayerSprite from '../../assets/sprites/king/idle.png';
+
 import PlayerDTO from '../../dtos/player';
 import { Level1 } from '../../services/getLevels';
 
@@ -16,12 +18,17 @@ const Canvas = (props) => {
         C.getCanvasInstance().width = 64 * 16;
         C.getCanvasInstance().height = 64 * 9;
 
-        const player = new PlayerDTO({ collisionBlocks: Level1.collisionBlocks });
+        const player = new PlayerDTO({ 
+            collisionBlocks: Level1.collisionBlocks,
+            imageSrc: PlayerSprite,
+            frameRate: 11
+         });
 
         const animate = () => {
             window.requestAnimationFrame(animate);
             Level1.draw();
             
+            player.checkMovement();
             player.draw();
             player.update();
         }
