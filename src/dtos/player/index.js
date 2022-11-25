@@ -2,10 +2,10 @@ import C from '../../services/canvas';
 import { keyDown, keyUp } from '../../services/eventListeners';
 
 class PlayerDTO {
-    constructor() {
+    constructor({ collisionBlocks = [] }) {
         this.position = {
-            x: 100,
-            y: 100
+            x: 200,
+            y: 200
         }
 
         this.velocity = {
@@ -15,8 +15,8 @@ class PlayerDTO {
         this.gravity = 0.2;
         this.runSpeed = 2;
 
-        this.width = 100;
-        this.height = 100;
+        this.width = 25;
+        this.height = 25;
         this.sides = {
             bottom: this.position.y + this.height
         }
@@ -32,7 +32,7 @@ class PlayerDTO {
                 'action': 'jump',
                 'down': () => {
                     if (this.velocity.y !== 0) return;
-                    this.velocity.y = -10;
+                    this.velocity.y = -7;
                 },
                 'up': () => {}
             },
@@ -54,6 +54,8 @@ class PlayerDTO {
             }
         }
         this.bindMovements();
+
+        this.collisionBlocks = collisionBlocks;
     }
 
     draw() {
@@ -67,12 +69,61 @@ class PlayerDTO {
 
     update() {
         this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
-        this.sides.bottom = this.position.y + this.height;
 
-        if(this.sides.bottom + this.velocity.y < C.getCanvasInstance().height) {
-            this.velocity.y += this.gravity;
-        } else this.velocity.y = 0;
+        this.checkForHorizontalCollision();
+        this.applyGravity();
+        this.checkForVerticalCollision();
+    }
+
+    applyGravity() {
+        this.velocity.y += this.gravity;
+        this.position.y += this.velocity.y;
+    }
+
+    checkForHorizontalCollision() {
+        for(let i = 0; i < this.collisionBlocks.length; i++){
+            const collisionBlock = this.collisionBlocks[i];
+            if(
+                this.position.x <= collisionBlock.position.x + collisionBlock.width &&
+                this.position.x + this.width >= collisionBlock.position.x &&
+                this.position.y + this.height >= collisionBlock.position.y &&
+                this.position.y <= collisionBlock.position.y + collisionBlock.height
+            ) {
+                if(this.velocity.x < 0) {
+                    this.position.x = collisionBlock.position.x + collisionBlock.width + 0.01;
+                    break;
+                }
+
+                if(this.velocity.x > 0) {
+                    this.position.x = collisionBlock.position.x - this.width - 0.01;
+                    break;
+                }
+            }
+        }
+    }
+
+    checkForVerticalCollision() {
+        for(let i = 0; i < this.collisionBlocks.length; i++){
+            const collisionBlock = this.collisionBlocks[i];
+            if(
+                this.position.x <= collisionBlock.position.x + collisionBlock.width &&
+                this.position.x + this.width >= collisionBlock.position.x &&
+                this.position.y + this.height >= collisionBlock.position.y &&
+                this.position.y <= collisionBlock.position.y + collisionBlock.height 
+            ) {
+                if(this.velocity.y < 0) {
+                    this.velocity.y = 0;
+                    this.position.y = collisionBlock.position.y + collisionBlock.height + 0.01;
+                    break;
+                }
+
+                if(this.velocity.y > 0) {
+                    this.velocity.y = 0;
+                    this.position.y = collisionBlock.position.y - this.height - 0.01;
+                    break;
+                }
+            }
+        }
     }
 
     bindMovements() {

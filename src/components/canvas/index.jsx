@@ -16,7 +16,7 @@ const Canvas = (props) => {
         C.getCanvasInstance().width = 64 * 16;
         C.getCanvasInstance().height = 64 * 9;
 
-        const player = new PlayerDTO();
+        const player = new PlayerDTO({ collisionBlocks: Level1.collisionBlocks });
 
         const animate = () => {
             window.requestAnimationFrame(animate);
