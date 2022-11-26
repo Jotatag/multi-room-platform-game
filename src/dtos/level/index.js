@@ -11,7 +11,8 @@ class LevelDTO extends SpriteDTO {
         {
             levelNumber,
             bossRoom=false,
-            collisionBlocksArray=[]
+            collisionBlocksArray=[],
+            doors=[]
         }
     ) {
         super({ position, imageSrc });
@@ -23,6 +24,7 @@ class LevelDTO extends SpriteDTO {
 
         this.levelNumber = levelNumber;
         this.bossRoom = bossRoom;
+        this.doors = doors;
     }
 
     createCollisionsFrom2D() {
@@ -45,6 +47,12 @@ class LevelDTO extends SpriteDTO {
     drawCollisions() {
         this.collisionBlocks.forEach((block) => {
             block.draw();
+        });
+    }
+
+    drawDoors() {
+        this.doors.forEach((door) => {
+            door.draw();
         });
     }
 }

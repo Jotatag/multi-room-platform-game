@@ -1,10 +1,4 @@
-
-import gsap from 'gsap';
-import globalContext from '../context';
-
-import { startPosition } from './position';
-import levels from '../levels';
-import overlay from '../levels/overlay';
+import { changeLevel } from './actions';
 
 import PlayerIdleRight from '../../assets/sprites/king/idle.png';
 import PlayerIdleLeft from '../../assets/sprites/king/idleLeft.png';
@@ -43,17 +37,7 @@ const playerAnimations = {
         loop: false,
         imageSrc: PlayerEnterDoor,
         onComplete: () => {
-            gsap.to(overlay, {
-                opacity: 1,
-                onComplete: () => {
-                    globalContext.currentLevel += 1;
-                    globalContext.currentLevelInstance = levels[globalContext.currentLevel];
-                    gsap.to(overlay, {
-                        opacity: 0
-                    });
-                    startPosition();
-                }
-            });
+            changeLevel();
         }
     }
 }

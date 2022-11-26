@@ -16,6 +16,13 @@ const levelSprites = {
         },
         imageSrc: l2Background
     },
+    3: {
+        position: {
+            x: 0, 
+            y: 0
+        },
+        imageSrc: l2Background
+    },
 }
 
 export default levelSprites;

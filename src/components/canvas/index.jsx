@@ -9,10 +9,6 @@ import Player from '../../services/player';
 
 import overlay from '../../services/levels/overlay';
 
-import DoorSprit from '../../assets/sprites/doorOpen.png';
-
-import DoorDTO from '../../dtos/door';
-
 const Canvas = (props) => {
     const canvasRef = useRef(null);
 
@@ -25,31 +21,11 @@ const Canvas = (props) => {
         globalContext.currentPlayer = Player();
         if(!globalContext.currentPlayer) return;
 
-        const doors = [
-            new DoorDTO(
-                {
-                    position: {
-                        x: 767,
-                        y: 270
-                    },
-                    imageSrc: DoorSprit,
-                    frameRate: 5,
-                    frameBuffer: 20,
-                    loop: false,
-                    autoplay: false
-                },
-                globalContext.currentPlayer
-            )
-        ];
-
         const animate = () => {
             window.requestAnimationFrame(animate);
             globalContext.currentLevelInstance.draw();
             globalContext.currentLevelInstance.drawCollisions();
-
-            doors.forEach((door) => {
-                door.draw();
-            });
+            globalContext.currentLevelInstance.drawDoors();
             
             globalContext.currentPlayer.checkMovement();
             globalContext.currentPlayer.draw();

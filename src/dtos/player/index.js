@@ -3,7 +3,7 @@ import { keyDown, keyUp } from '../../services/eventListeners';
 import switchCase from '../../utils/switchCase';
 
 class PlayerDTO extends SpriteDTO {
-    constructor({ collisionBlocks = [], imageSrc, frameRate, animations, loop }) {
+    constructor({ collisionBlocks = [], currentLevel, imageSrc, frameRate, animations, loop }) {
         super({ imageSrc, frameRate, animations, loop });
         this.position = {
             x: 200,
@@ -29,6 +29,7 @@ class PlayerDTO extends SpriteDTO {
                 'down': () => {
                     if (this.velocity.y !== 0) return;
                     if (this.preventInput) return;
+                    if (this.checkForDoorCollision()) return;
                     this.velocity.y = -2.5;
                 },
                 'up': () => {}
@@ -54,6 +55,7 @@ class PlayerDTO extends SpriteDTO {
         this.preventInput = false;
 
         this.collisionBlocks = collisionBlocks;
+        this.currentLevel = currentLevel;
     }
 
     checkMovement() {
@@ -149,6 +151,27 @@ class PlayerDTO extends SpriteDTO {
         }
     }
 
+    checkForDoorCollision() {
+        for(let i = 0; i < this.currentLevel.doors.length; i++) {
+            const door = this.currentLevel.doors[i];
+            if(
+                this.hitBox.position.x + this.hitBox.width <= door.position.x + door.width &&
+                this.hitBox.position.x >= door.position.x &&
+                this.hitBox.position.y + this.hitBox.height >= door.position.y &&
+                this.hitBox.position.y <= door.position.y + door.height
+            ) {
+                this.velocity.x = 0;
+                this.velocity.y = 0;
+                this.preventInput = true;
+                this.switchSprite('enterDoor');
+                door.play();
+                return true;
+            }
+        };
+
+        return false;
+    }
+
     bindMovements() {
         const getKey = switchCase(this.movements);
 
@@ -170,6 +193,7 @@ class PlayerDTO extends SpriteDTO {
         this.frameBuffer = this.animations[name].frameBuffer;
         this.loop = this.animations[name].loop;
         this.currentAnimation = this.animations[name];
+        this.currentAnimation.isActive = false;
     }
 }
 

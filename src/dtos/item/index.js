@@ -1,6 +1,6 @@
 import SpriteDTO from '../sprite';
 
-class DoorDTO extends SpriteDTO {
+class ItemDTO extends SpriteDTO {
     constructor(
         { 
             position,
@@ -21,6 +21,7 @@ class DoorDTO extends SpriteDTO {
         });
     }
 
+    
 }
 
-export default DoorDTO;
+export default ItemDTO;

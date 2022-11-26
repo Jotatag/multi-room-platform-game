@@ -7,6 +7,7 @@ import playerAnimations from './animations';
 
 const Player = () => new PlayerDTO({ 
     collisionBlocks: globalContext.currentLevelInstance.collisionBlocks,
+    currentLevel: globalContext.currentLevelInstance,
     imageSrc: PlayerIdleRight,
     frameRate: 11,
     animations: playerAnimations

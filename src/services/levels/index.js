@@ -1,7 +1,8 @@
 import LevelDTO from '../../dtos/level';
 
 import levelSprites from './sprites';
-import collisionBlocks from './collisionBlocks';
+import levelCollisionBlocks from './collisionBlocks';
+import levelDoors from './doors';
 
 const levels = {
     1: new LevelDTO(
@@ -12,7 +13,8 @@ const levels = {
         {
             levelNumber: 1,
             bossRoom: false,
-            collisionBlocksArray: collisionBlocks['1']
+            collisionBlocksArray: levelCollisionBlocks['1'],
+            doors: levelDoors['1']
         }
     ),
     2: new LevelDTO(
@@ -23,7 +25,20 @@ const levels = {
         {
             levelNumber: 2,
             bossRoom: false,
-            collisionBlocksArray: collisionBlocks['2']
+            collisionBlocksArray: levelCollisionBlocks['2'],
+            doors: levelDoors['2']
+        }
+    ),
+    3: new LevelDTO(
+        { 
+            position: levelSprites['3'].position,
+            imageSrc:  levelSprites['3'].imageSrc
+        },
+        {
+            levelNumber: 3,
+            bossRoom: false,
+            collisionBlocksArray: levelCollisionBlocks['3'],
+            doors: levelDoors['3']
         }
     ),
 };
