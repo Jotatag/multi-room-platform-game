@@ -23,6 +23,6 @@ const levelSprites = {
         },
         imageSrc: l2Background
     },
-}
+};
 
 export default levelSprites;

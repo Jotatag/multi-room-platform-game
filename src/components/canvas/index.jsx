@@ -26,6 +26,7 @@ const Canvas = (props) => {
             globalContext.currentLevelInstance.draw();
             globalContext.currentLevelInstance.drawCollisions();
             globalContext.currentLevelInstance.drawDoors();
+            globalContext.currentLevelInstance.drawItens();
             
             globalContext.currentPlayer.checkMovement();
             globalContext.currentPlayer.draw();
@@ -44,6 +45,6 @@ const Canvas = (props) => {
     return (
         <Styles.Canvas ref={canvasRef} {...props} />
     );
-}
+};
 
 export default Canvas;

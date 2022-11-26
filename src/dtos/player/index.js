@@ -15,7 +15,7 @@ class PlayerDTO extends SpriteDTO {
             y: 0
         }
         this.gravity = 0.03;
-        this.runSpeed = 0.7;
+        this.runSpeed = 1;
 
         this.sides = {
             bottom: this.position.y + this.height
@@ -195,6 +195,6 @@ class PlayerDTO extends SpriteDTO {
         this.currentAnimation = this.animations[name];
         this.currentAnimation.isActive = false;
     }
-}
+};
 
 export default PlayerDTO;

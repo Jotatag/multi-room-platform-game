@@ -47,6 +47,6 @@ const levelDoors = {
             }
         )
     ]
-}
+};
 
 export default levelDoors;
