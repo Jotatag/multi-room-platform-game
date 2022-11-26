@@ -50,6 +50,7 @@ class DoorDTO extends SpriteDTO {
             this.player.velocity.y = 0;
             this.player.preventInput = true;
             this.player.switchSprite('enterDoor');
+            this.play();
             return;
         }
 

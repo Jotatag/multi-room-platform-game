@@ -1,6 +1,6 @@
 import C from '../../services/canvas';
 
-class CollisionBlock {
+class CollisionBlockDTO {
     constructor({ position }) {
         this.position = position;
         this.width = 64;
@@ -13,4 +13,4 @@ class CollisionBlock {
     }
 }
 
-export default CollisionBlock;
+export default CollisionBlockDTO;

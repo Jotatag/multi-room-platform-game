@@ -3,18 +3,15 @@ import React, { useEffect, useRef } from 'react';
 import * as Styles from './styles';
 
 import C from '../../services/canvas';
+import globalContext from '../../services/context';
 
-import PlayerIdleRight from '../../assets/sprites/king/idle.png';
-import PlayerIdleLeft from '../../assets/sprites/king/idleLeft.png';
-import PlayerRunRight from '../../assets/sprites/king/runRight.png';
-import PlayerIdRunLeft from '../../assets/sprites/king/runLeft.png';
-import PlayerEnterDoor from '../../assets/sprites/king/enterDoor.png';
+import Player from '../../services/player';
+
+import overlay from '../../services/levels/overlay';
 
 import DoorSprit from '../../assets/sprites/doorOpen.png';
 
-import PlayerDTO from '../../dtos/player';
 import DoorDTO from '../../dtos/door';
-import { Level1 } from '../../services/getLevels';
 
 const Canvas = (props) => {
     const canvasRef = useRef(null);
@@ -25,43 +22,8 @@ const Canvas = (props) => {
         C.getCanvasInstance().width = 64 * 16;
         C.getCanvasInstance().height = 64 * 9;
 
-        const player = new PlayerDTO({ 
-            collisionBlocks: Level1.collisionBlocks,
-            imageSrc: PlayerIdleRight,
-            frameRate: 11,
-            animations: {
-                idleRight: {
-                    frameRate: 11,
-                    frameBuffer: 12,
-                    loop: true,
-                    imageSrc: PlayerIdleRight
-                },
-                idleLeft: {
-                    frameRate: 11,
-                    frameBuffer: 12,
-                    loop: true,
-                    imageSrc: PlayerIdleLeft
-                },
-                runRight: {
-                    frameRate: 8,
-                    frameBuffer: 12,
-                    loop: true,
-                    imageSrc: PlayerRunRight
-                },
-                runLeft: {
-                    frameRate: 8,
-                    frameBuffer: 12,
-                    loop: true,
-                    imageSrc: PlayerIdRunLeft
-                },
-                enterDoor: {
-                    frameRate: 8,
-                    frameBuffer: 12,
-                    loop: false,
-                    imageSrc: PlayerEnterDoor
-                }
-            }
-         });
+        globalContext.currentPlayer = Player();
+        if(!globalContext.currentPlayer) return;
 
         const doors = [
             new DoorDTO(
@@ -72,25 +34,32 @@ const Canvas = (props) => {
                     },
                     imageSrc: DoorSprit,
                     frameRate: 5,
-                    frameBuffer: 25,
+                    frameBuffer: 20,
                     loop: false,
                     autoplay: false
                 },
-                player
+                globalContext.currentPlayer
             )
         ];
 
         const animate = () => {
             window.requestAnimationFrame(animate);
-            Level1.draw();
+            globalContext.currentLevelInstance.draw();
+            globalContext.currentLevelInstance.drawCollisions();
 
             doors.forEach((door) => {
                 door.draw();
             });
             
-            player.checkMovement();
-            player.draw();
-            player.update();
+            globalContext.currentPlayer.checkMovement();
+            globalContext.currentPlayer.draw();
+            globalContext.currentPlayer.update();
+
+            C.getCanvasContext().save();
+            C.getCanvasContext().globalAlpha = overlay.opacity;
+            C.getCanvasContext().fillStyle = 'black';
+            C.getCanvasContext().fillRect(0, 0, C.getCanvasInstance().width, C.getCanvasInstance().height);
+            C.getCanvasContext().restore();
         }
 
         animate();

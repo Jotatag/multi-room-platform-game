@@ -14,8 +14,8 @@ class PlayerDTO extends SpriteDTO {
             x: 0,
             y: 0
         }
-        this.gravity = 0.2;
-        this.runSpeed = 2;
+        this.gravity = 0.03;
+        this.runSpeed = 0.7;
 
         this.sides = {
             bottom: this.position.y + this.height
@@ -28,7 +28,8 @@ class PlayerDTO extends SpriteDTO {
                 'action': 'jump',
                 'down': () => {
                     if (this.velocity.y !== 0) return;
-                    this.velocity.y = -7;
+                    if (this.preventInput) return;
+                    this.velocity.y = -2.5;
                 },
                 'up': () => {}
             },
@@ -74,18 +75,11 @@ class PlayerDTO extends SpriteDTO {
 
     update() {
         this.position.x += this.velocity.x;
-
         this.updateHitBox();
         this.checkForHorizontalCollision();
         this.applyGravity();
 
         this.updateHitBox();
-        /* C.getCanvasContext().fillRect(
-            this.hitBox.position.x,
-            this.hitBox.position.y,
-            this.hitBox.width,
-            this.hitBox.height
-        ); */
         this.checkForVerticalCollision();
     }
 
@@ -175,6 +169,7 @@ class PlayerDTO extends SpriteDTO {
         this.frameRate = this.animations[name].frameRate;
         this.frameBuffer = this.animations[name].frameBuffer;
         this.loop = this.animations[name].loop;
+        this.currentAnimation = this.animations[name];
     }
 }
 
