@@ -1,10 +1,10 @@
-import C from '../../services/canvas';
 import SpriteDTO from '../sprite';
 import { keyDown, keyUp } from '../../services/eventListeners';
+import switchCase from '../../utils/switchCase';
 
 class PlayerDTO extends SpriteDTO {
-    constructor({ collisionBlocks = [], imageSrc, frameRate }) {
-        super({ imageSrc, frameRate });
+    constructor({ collisionBlocks = [], imageSrc, frameRate, animations, loop }) {
+        super({ imageSrc, frameRate, animations, loop });
         this.position = {
             x: 200,
             y: 200
@@ -21,11 +21,7 @@ class PlayerDTO extends SpriteDTO {
             bottom: this.position.y + this.height
         }
 
-        this.switchCase =
-            (obj) =>
-            (value) => {
-                return obj[value] || obj['_default'];
-            }
+        this.lastDirection = 'right';
 
         this.movements = {
             'w': {
@@ -54,14 +50,26 @@ class PlayerDTO extends SpriteDTO {
             }
         }
         this.bindMovements();
+        this.preventInput = false;
 
         this.collisionBlocks = collisionBlocks;
     }
 
     checkMovement() {
+        if(this.preventInput) return;
         this.velocity.x = 0;
-        if(this.movements.d.pressed) this.velocity.x = Math.abs(this.runSpeed);
-        else if(this.movements.a.pressed) this.velocity.x = -Math.abs(this.runSpeed);
+        if(this.movements.d.pressed) {
+            this.switchSprite('runRight');
+            this.velocity.x = Math.abs(this.runSpeed);
+            this.lastDirection = 'right';
+        } else if(this.movements.a.pressed) {
+            this.switchSprite('runLeft');
+            this.velocity.x = -Math.abs(this.runSpeed);
+            this.lastDirection = 'left';
+        } else {
+            if(this.lastDirection === 'left') this.switchSprite('idleLeft');
+            else this.switchSprite('idleRight');
+        }
     }
 
     update() {
@@ -148,7 +156,7 @@ class PlayerDTO extends SpriteDTO {
     }
 
     bindMovements() {
-        const getKey = this.switchCase(this.movements);
+        const getKey = switchCase(this.movements);
 
         keyDown((key) => {
             getKey(key).down();
@@ -157,6 +165,16 @@ class PlayerDTO extends SpriteDTO {
         keyUp((key) => {
             getKey(key).up();
         });
+    }
+
+    switchSprite(name) {
+        if(this.image === this.animations[name].image) return;
+
+        this.currentFrame = 0;
+        this.image = this.animations[name].image;
+        this.frameRate = this.animations[name].frameRate;
+        this.frameBuffer = this.animations[name].frameBuffer;
+        this.loop = this.animations[name].loop;
     }
 }
 
