@@ -37,15 +37,15 @@ const levels = {
     ),
     3: new LevelDTO(
         { 
-            position: levelSprites['1'].position,
-            imageSrc:  levelSprites['1'].imageSrc
+            position: levelSprites['3'].position,
+            imageSrc:  levelSprites['3'].imageSrc
         },
         {
             levelNumber: 3,
-            bossRoom: false,
-            collisionBlocks: levelCollisionBlocks['1'],
-            startingPosition: levelStartingPosition['1'],
-            doors: levelDoors['1']
+            bossRoom: true,
+            collisionBlocks: levelCollisionBlocks['3'],
+            startingPosition: levelStartingPosition['3'],
+            doors: levelDoors['3']
         }
     ),
 };

@@ -25,3 +25,9 @@ export const changeLevel = () => {
         }
     });
 }
+
+export const togglePreventInput = () => {
+    if(!globalContext.currentPlayer) return;
+
+    globalContext.currentPlayer.preventInput = !globalContext.currentPlayer.preventInput;
+}

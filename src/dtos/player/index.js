@@ -2,6 +2,8 @@ import SpriteDTO from '../sprite';
 import { keyDown, keyUp } from '../../services/eventListeners';
 import switchCase from '../../utils/switchCase';
 
+import C from '../../services/canvas';
+
 class PlayerDTO extends SpriteDTO {
     constructor(
         { 
@@ -63,6 +65,13 @@ class PlayerDTO extends SpriteDTO {
                 },
                 'up': () => {}
             },
+            'z': {
+                'action': 'attack',
+                'down': () => {
+                    this.doAttack();
+                },
+                'up': () => {}
+            },
             '_default': {
                 'down': () => {},
                 'up': () => {}
@@ -112,6 +121,8 @@ class PlayerDTO extends SpriteDTO {
             width: 50,
             height: 55
         };
+        C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
+        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height);
     }
 
     applyGravity() {
@@ -207,6 +218,13 @@ class PlayerDTO extends SpriteDTO {
         }
 
         return false;
+    }
+
+    doAttack() {
+        this.velocity.x = 0;
+        this.preventInput = true;
+        if(this.lastDirection === 'left') this.switchSprite('attackLeft');
+        else this.switchSprite('attackRight');
     }
 
     bindMovements() {

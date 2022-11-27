@@ -8,7 +8,7 @@ const levelStartingPosition = {
         y: 140
     },
     3: {
-        x: 200,
+        x: 700,
         y: 200
     }
 }

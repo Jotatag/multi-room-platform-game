@@ -1,5 +1,6 @@
 import l1Background from '../../assets/sprites/backgroundLevel1.png';
-import l2Background from '../../assets/sprites/backgroundLevel2.png'
+import l2Background from '../../assets/sprites/backgroundLevel2.png';
+import l3Background from '../../assets/sprites/backgroundLevel3.png'
 
 const levelSprites = {
     1: {
@@ -21,7 +22,7 @@ const levelSprites = {
             x: 0, 
             y: 0
         },
-        imageSrc: l2Background
+        imageSrc: l3Background
     },
 };
 

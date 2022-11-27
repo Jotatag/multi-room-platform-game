@@ -32,21 +32,7 @@ const levelDoors = {
             }
         )
     ],
-    3: [
-        new DoorDTO(
-            {
-                position: {
-                    x: 772,
-                    y: 336
-                },
-                imageSrc: DoorSprite,
-                frameRate: 5,
-                frameBuffer: 20,
-                loop: false,
-                autoplay: false
-            }
-        )
-    ]
+    3: []
 };
 
 export default levelDoors;

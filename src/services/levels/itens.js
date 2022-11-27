@@ -1,4 +1,5 @@
 import ItemDTO from '../../dtos/item';
+
 import frames from '../frames';
 
 import HammerSprite from '../../assets/sprites/hammer.png'
@@ -20,7 +21,8 @@ const levelItens = {
                 frames: [frames.weaponAcquired]
             }
         )
-    ]
+    ],
+    3: []
 };
 
 export default levelItens;
