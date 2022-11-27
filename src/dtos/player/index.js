@@ -14,8 +14,8 @@ class PlayerDTO extends SpriteDTO {
             x: 0,
             y: 0
         }
-        this.gravity = 0.03;
-        this.runSpeed = 1;
+        this.gravity = 0.028;
+        this.runSpeed = 0.7;
 
         this.sides = {
             bottom: this.position.y + this.height
@@ -30,7 +30,7 @@ class PlayerDTO extends SpriteDTO {
                     if (this.velocity.y !== 0) return;
                     if (this.preventInput) return;
                     if (this.checkForDoorCollision()) return;
-                    this.velocity.y = -2.5;
+                    this.velocity.y = -2.2;
                 },
                 'up': () => {}
             },

@@ -2,6 +2,7 @@ import LevelDTO from '../../dtos/level';
 
 import levelSprites from './sprites';
 import levelCollisionBlocks from './collisionBlocks';
+import levelStartingPosition from './startingPosition';
 import levelDoors from './doors';
 import levelItens from './itens';
 
@@ -14,7 +15,8 @@ const levels = {
         {
             levelNumber: 1,
             bossRoom: false,
-            collisionBlocksArray: levelCollisionBlocks['1'],
+            collisionBlocks: levelCollisionBlocks['1'],
+            startingPosition: levelStartingPosition['1'],
             doors: levelDoors['1'],
             itens: levelItens['1']
         }
@@ -27,7 +29,8 @@ const levels = {
         {
             levelNumber: 2,
             bossRoom: false,
-            collisionBlocksArray: levelCollisionBlocks['2'],
+            collisionBlocks: levelCollisionBlocks['2'],
+            startingPosition: levelStartingPosition['2'],
             doors: levelDoors['2'],
             itens: levelItens['2']
         }
@@ -40,7 +43,8 @@ const levels = {
         {
             levelNumber: 3,
             bossRoom: false,
-            collisionBlocksArray: levelCollisionBlocks['1'],
+            collisionBlocks: levelCollisionBlocks['1'],
+            startingPosition: levelStartingPosition['1'],
             doors: levelDoors['1']
         }
     ),

@@ -16,8 +16,8 @@ export const changeLevel = () => {
             gsap.to(overlay, {
                 opacity: 0
             });
-            globalContext.currentPlayer.position.x = 96;
-            globalContext.currentPlayer.position.y = 140;
+            globalContext.currentPlayer.position.x = globalContext.currentLevelInstance.startingPosition.x;
+            globalContext.currentPlayer.position.y = globalContext.currentLevelInstance.startingPosition.y;
             globalContext.currentPlayer.collisionBlocks = levels[globalContext.currentLevel].collisionBlocks;
             globalContext.currentPlayer.switchSprite('idleRight');
             globalContext.currentPlayer.currentLevel = globalContext.currentLevelInstance;
