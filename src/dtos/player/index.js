@@ -68,7 +68,11 @@ class PlayerDTO extends SpriteDTO {
             'z': {
                 'action': 'attack',
                 'down': () => {
+                    if(this.currentAnimation.isActive) return;
                     this.doAttack();
+                    if(this.checkForAttackCollision()) {
+                        console.log('atacou');
+                    }
                 },
                 'up': () => {}
             },
@@ -79,6 +83,9 @@ class PlayerDTO extends SpriteDTO {
         }
         this.bindMovements();
         this.preventInput = false;
+
+        this.hitBox = null;
+        this.attackHitBox = null;
 
         this.collisionBlocks = collisionBlocks;
         this.currentLevel = currentLevel;
@@ -123,6 +130,19 @@ class PlayerDTO extends SpriteDTO {
         };
         C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
         C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height);
+    }
+
+    updateAttackHitBox() {
+        this.attackHitBox = {
+            position: {
+                x: this.lastDirection === 'left' ? 
+                   this.hitBox.position.x - 45 : 
+                   this.hitBox.position.x + this.hitBox.width,
+                y: this.hitBox.position.y - 20
+            },
+            width: 45,
+            height: this.hitBox.height + 20
+        }
     }
 
     applyGravity() {
@@ -220,9 +240,28 @@ class PlayerDTO extends SpriteDTO {
         return false;
     }
 
+    checkForAttackCollision() {
+        if(!this.attackHitBox) return false;
+
+        for(let i = 0; i < this.currentLevel.itens.length; i++){
+            const item = this.currentLevel.itens[i];
+            if(
+                this.attackHitBox.position.x <= item.position.x + item.width &&
+                this.attackHitBox.position.x + this.attackHitBox.width >= item.position.x &&
+                this.attackHitBox.position.y + this.attackHitBox.height >= item.position.y &&
+                this.attackHitBox.position.y <= item.position.y + item.height 
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     doAttack() {
-        this.velocity.x = 0;
+        if(this.velocity.y === 0) this.velocity.x = 0;
         this.preventInput = true;
+        this.updateAttackHitBox();
         if(this.lastDirection === 'left') this.switchSprite('attackLeft');
         else this.switchSprite('attackRight');
     }

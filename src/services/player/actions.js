@@ -31,3 +31,9 @@ export const togglePreventInput = () => {
 
     globalContext.currentPlayer.preventInput = !globalContext.currentPlayer.preventInput;
 }
+
+export const finishAttack = () => {
+    if(!globalContext.currentPlayer) return;
+
+    globalContext.currentPlayer.attackHitBox = null;
+}

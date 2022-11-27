@@ -84,7 +84,7 @@ class SpriteDTO {
                     this.currentAnimation.onComplete();
                     this.currentAnimation.isActive = true;
             }
-        } 
+        }
     }
 }
 

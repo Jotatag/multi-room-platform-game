@@ -1,4 +1,4 @@
-import { changeLevel, togglePreventInput } from './actions';
+import { changeLevel, togglePreventInput, finishAttack } from './actions';
 
 import PlayerIdleRight from '../../assets/sprites/king/idle.png';
 import PlayerIdleLeft from '../../assets/sprites/king/idleLeft.png';
@@ -50,6 +50,7 @@ const playerAnimations = {
         imageSrc: PlayerAttackRight,
         onComplete: () => {
             togglePreventInput();
+            finishAttack();
         }
     },
     attackLeft: {
@@ -59,6 +60,7 @@ const playerAnimations = {
         imageSrc: PlayerAttackLeft,
         onComplete: () => {
             togglePreventInput();
+            finishAttack();
         }
     }
 }
