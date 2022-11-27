@@ -32,6 +32,8 @@ const Canvas = (props) => {
             globalContext.currentPlayer.draw();
             globalContext.currentPlayer.update();
 
+            globalContext.currentLevelInstance.drawFrames();
+
             C.getCanvasContext().save();
             C.getCanvasContext().globalAlpha = overlay.opacity;
             C.getCanvasContext().fillStyle = 'black';

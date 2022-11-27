@@ -2,9 +2,9 @@ import C from '../../services/canvas';
 
 class SpriteDTO {
     constructor({
-        position, 
-        imageSrc, 
-        frameRate = 1, 
+        position,
+        imageSrc,
+        frameRate = 1,
         animations,
         frameBuffer = 12,
         loop = true,
@@ -13,11 +13,7 @@ class SpriteDTO {
         this.position = position;
         this.image = new Image();
         this.image.src = imageSrc;
-        this.image.onload = () => {
-            this.loaded = true;
-            this.width = this.image.width / this.frameRate;
-            this.height = this.image.height;
-        }
+        this.image.onload = () => this.onLoadSprite();
         this.loaded = false;
         this.frameRate = frameRate;
         this.currentFrame = 0;
@@ -61,6 +57,12 @@ class SpriteDTO {
         );
 
         this.updateFrames();
+    }
+
+    onLoadSprite() {
+        this.loaded = true;
+        this.width = this.image.width / this.frameRate;
+        this.height = this.image.height;
     }
 
     play() {

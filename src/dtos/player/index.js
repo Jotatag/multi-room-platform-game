@@ -3,11 +3,21 @@ import { keyDown, keyUp } from '../../services/eventListeners';
 import switchCase from '../../utils/switchCase';
 
 class PlayerDTO extends SpriteDTO {
-    constructor({ collisionBlocks = [], currentLevel, imageSrc, frameRate, animations, loop }) {
+    constructor(
+        { 
+            collisionBlocks=[],
+            currentLevel,
+            imageSrc,
+            frameRate,
+            animations,
+            loop,
+            itens=[]
+        }
+    ) {
         super({ imageSrc, frameRate, animations, loop });
         this.position = {
-            x: 200,
-            y: 200
+            x: currentLevel.startingPosition.x,
+            y: currentLevel.startingPosition.y
         }
 
         this.velocity = {
@@ -24,7 +34,7 @@ class PlayerDTO extends SpriteDTO {
         this.lastDirection = 'right';
 
         this.movements = {
-            'w': {
+            'ArrowUp': {
                 'action': 'jump',
                 'down': () => {
                     if (this.velocity.y !== 0) return;
@@ -34,17 +44,24 @@ class PlayerDTO extends SpriteDTO {
                 },
                 'up': () => {}
             },
-            'a': {
+            'ArrowLeft': {
                 'action': 'left',
                 'pressed': false,
-                'down': () => { this.movements.a.pressed = true },
-                'up': () => { this.movements.a.pressed = false }
+                'down': () => { this.movements.ArrowLeft.pressed = true },
+                'up': () => { this.movements.ArrowLeft.pressed = false }
             },
-            'd': {
+            'ArrowRight': {
                 'action': 'right',
                 'pressed': false,
-                'down': () => { this.movements.d.pressed = true },
-                'up': () => { this.movements.d.pressed = false }
+                'down': () => { this.movements.ArrowRight.pressed = true },
+                'up': () => { this.movements.ArrowRight.pressed = false }
+            },
+            'x': {
+                'action': 'grab-item',
+                'down': () => {
+                    this.checkForItemCollision();
+                },
+                'up': () => {}
             },
             '_default': {
                 'down': () => {},
@@ -56,16 +73,17 @@ class PlayerDTO extends SpriteDTO {
 
         this.collisionBlocks = collisionBlocks;
         this.currentLevel = currentLevel;
+        this.itens = itens;
     }
 
     checkMovement() {
         if(this.preventInput) return;
         this.velocity.x = 0;
-        if(this.movements.d.pressed) {
+        if(this.movements.ArrowRight.pressed) {
             this.switchSprite('runRight');
             this.velocity.x = Math.abs(this.runSpeed);
             this.lastDirection = 'right';
-        } else if(this.movements.a.pressed) {
+        } else if(this.movements.ArrowLeft.pressed) {
             this.switchSprite('runLeft');
             this.velocity.x = -Math.abs(this.runSpeed);
             this.lastDirection = 'left';
@@ -168,6 +186,25 @@ class PlayerDTO extends SpriteDTO {
                 return true;
             }
         };
+
+        return false;
+    }
+
+    checkForItemCollision() {
+        for(let i = 0; i < this.currentLevel.itens.length; i++){
+            const item = this.currentLevel.itens[i];
+            if(
+                this.hitBox.position.x <= item.position.x + item.width &&
+                this.hitBox.position.x + this.hitBox.width >= item.position.x &&
+                this.hitBox.position.y + this.hitBox.height >= item.position.y &&
+                this.hitBox.position.y <= item.position.y + item.height 
+            ) {
+                const itemGrabbed = this.currentLevel.itens.splice(i, 1);
+                this.itens.push(itemGrabbed[0]);
+                this.currentLevel.frame = itemGrabbed[0].frames[0];
+                return true;
+            }
+        }
 
         return false;
     }

@@ -1,5 +1,6 @@
 import SpriteDTO from '../sprite';
 
+import C from '../../services/canvas';
 class ItemDTO extends SpriteDTO {
     constructor(
         { 
@@ -8,7 +9,8 @@ class ItemDTO extends SpriteDTO {
             frameRate,
             frameBuffer,
             loop,
-            autoplay
+            autoplay,
+            frames=[]
         }
     ) {
         super({ 
@@ -19,9 +21,15 @@ class ItemDTO extends SpriteDTO {
             loop,
             autoplay
         });
+
+        this.frames = frames;
     }
 
-    
+    drawCollision() {
+        C.getCanvasContext().fillStyle = 'rgb(0, 0, 255, 0.5)';
+        C.getCanvasContext().fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+
 }
 
 export default ItemDTO;

@@ -2,8 +2,8 @@ import levels from '../levels';
 
 class GlobalContext {
     constructor(
-        currentLevel = 1,
-        currentLevelInstance = levels['1'],
+        currentLevel = 2,
+        currentLevelInstance = levels['2'],
         currentMoney = 0,
         currentPlayer = null
     ) {

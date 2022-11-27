@@ -1,4 +1,6 @@
 import ItemDTO from '../../dtos/item';
+import frames from '../frames';
+
 import HammerSprite from '../../assets/sprites/hammer.png'
 
 const levelItens = {
@@ -7,14 +9,15 @@ const levelItens = {
         new ItemDTO(
             {
                 position: {
-                    x: 120,
+                    x: 150,
                     y: 400
                 },
                 imageSrc: HammerSprite,
                 frameRate: 2,
-                frameBuffer: 180,
+                frameBuffer: 150,
                 loop: true,
-                autoplay: true
+                autoplay: true,
+                frames: [frames.weaponAcquired]
             }
         )
     ]

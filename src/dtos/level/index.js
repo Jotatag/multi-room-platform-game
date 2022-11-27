@@ -15,7 +15,8 @@ class LevelDTO extends SpriteDTO {
             },
             collisionBlocks=[],
             doors=[],
-            itens=[]
+            itens=[],
+            frame=null
         }
     ) {
         super({ position, imageSrc });
@@ -26,6 +27,14 @@ class LevelDTO extends SpriteDTO {
         this.collisionBlocks = collisionBlocks;
         this.doors = doors;
         this.itens = itens;
+        this.frame = frame;
+    }
+
+    drawFrames() {
+        if(!this.frame) return;
+        this.frame.autoplay = true;
+        this.frame.draw();
+        if(this.frame.animation.ended) this.frame = null;
     }
 
     drawCollisions() {
@@ -43,6 +52,7 @@ class LevelDTO extends SpriteDTO {
     drawItens() {
         this.itens.forEach((item) => {
             item.draw();
+            item.drawCollision();
         });
     }
 };
