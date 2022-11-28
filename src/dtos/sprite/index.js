@@ -4,9 +4,9 @@ class SpriteDTO {
     constructor({
         position,
         imageSrc,
-        frameRate = 1,
+        frameRate=1,
         animations,
-        frameBuffer = 12,
+        frameBuffer=12,
         loop = true,
         autoplay = true
     }) {

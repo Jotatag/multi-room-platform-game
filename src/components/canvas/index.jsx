@@ -6,6 +6,7 @@ import C from '../../services/canvas';
 import globalContext from '../../services/context';
 
 import Player from '../../services/player';
+import levelBosses from '../../services/boss';
 
 import overlay from '../../services/levels/overlay';
 
@@ -28,6 +29,14 @@ const Canvas = (props) => {
             globalContext.currentLevelInstance.drawDoors();
             globalContext.currentLevelInstance.drawItens();
             
+            if(globalContext.currentLevelInstance.bossRoom) {
+                if(!levelBosses[globalContext.currentLevel].player)
+                    levelBosses[globalContext.currentLevel].player= globalContext.currentPlayer;
+                levelBosses[globalContext.currentLevel].checkMovement();
+                levelBosses[globalContext.currentLevel].draw();
+                levelBosses[globalContext.currentLevel].update();
+            }
+
             globalContext.currentPlayer.checkMovement();
             globalContext.currentPlayer.draw();
             globalContext.currentPlayer.update();
