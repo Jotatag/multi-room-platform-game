@@ -39,6 +39,7 @@ const Canvas = (props) => {
                     levelBosses[globalContext.currentLevel].currentAttack.draw();
                 }
                 levelBosses[globalContext.currentLevel].update();
+                levelBosses[globalContext.currentLevel].drawAttackHitBox();
             }
 
             globalContext.currentPlayer.checkMovement();

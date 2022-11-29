@@ -10,18 +10,32 @@ import GolemLaserRight from '../../assets/sprites/boss/golem/laserRight.png';
 
 import AttackLaserRight from '../../assets/sprites/boss/golem/attack/laserRight.png';
 
+import AttackMeeleRight from '../../assets/sprites/boss/golem/attack/meeleRight2.png'
+
 const bossAnimations = {
     idleRight: {
         frameRate: 4,
         frameBuffer: 200,
         loop: true,
+        type: 'neutral',
         imageSrc: GolemIdleRight
     },
     idleLeft: {
         frameRate: 4,
         frameBuffer: 200,
         loop: true,
+        type: 'neutral',
         imageSrc: GolemIdleLeft
+    },
+    meeleRight: {
+        frameRate: 10,
+        frameBuffer: 200,
+        loop: false,
+        type: 'attack',
+        imageSrc: AttackMeeleRight,
+        hitBoxFrames: [9, 8, 7, 6],
+        onComplete: () => {
+        }
     },
     laserRight: {
         frameRate: 6,

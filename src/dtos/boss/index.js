@@ -34,6 +34,7 @@ class BossDTO extends SpriteDTO {
 
         this.hitBox = null;
         this.attackHitBox = null;
+        this.attackHitBoxFrames = [];
 
         this.collisionBlocks = collisionBlocks;
         this.currentLevel = currentLevel;
@@ -41,15 +42,20 @@ class BossDTO extends SpriteDTO {
         this.player = player;
 
         this.elapsedAttackFrame = 0;
+        this.elapsedFinishAttackFrame = 0;
         this.attackDelay = attackDelay;
+
+        this.attackAnimationIsActive = false;
+        this.animationType = 'neutral';
     }
 
     checkMovement() {
         if(!this.player) return;
         this.velocity.x = 0;
 
-        if(this.currentAnimation?.type === 'attack' 
-            && this.currentAttack?.animationIsActive) return;
+        console.log(this.checkFinishAttack())
+
+        if(!this.checkFinishAttack()) return;
 
         if(this.player.position.y > 250) return this.doAttack();
 
@@ -73,6 +79,27 @@ class BossDTO extends SpriteDTO {
 
         this.updateHitBox();
         this.checkForVerticalCollision();
+
+        if(this.attackHitBoxFrames?.includes(this.currentFrame)) this.updateAttackHitBox();
+    }
+
+    updateAttackHitBox() {
+        this.attackHitBox = {
+            position: {
+                x: this.lastDirection === 'left' ? 
+                   this.hitBox.position.x - 45 : 
+                   this.hitBox.position.x + this.hitBox.width,
+                y: this.hitBox.position.y + 50
+            },
+            width: 35,
+            height: this.hitBox.height - 50
+        }
+    }
+
+    drawAttackHitBox() {
+        if(!this.attackHitBox) return;
+        C.getCanvasContext().fillStyle = 'rgb(0, 0, 255, 0.5)';
+        C.getCanvasContext().fillRect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.height);
     }
 
     applyGravity() {
@@ -86,11 +113,11 @@ class BossDTO extends SpriteDTO {
                 x: this.position.x + 45,
                 y: this.position.y + 12
             },
-            width: 185,
+            width: 170,
             height: 150
         };
-        /* C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
-        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height); */
+        C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
+        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height);
     }
 
     checkForHorizontalCollision() {
@@ -151,6 +178,7 @@ class BossDTO extends SpriteDTO {
 
         this.switchSprite('laserRight');
         if(this.animationCompleted) {
+            console.log('dad')
             if(this.currentAttack?.animationCompleted) {
                 this.switchSprite('idleRight');
                 this.currentAttack = null;
@@ -166,6 +194,29 @@ class BossDTO extends SpriteDTO {
         }
     }
 
+    doMeeleAttack() {
+        if(!this.player) return;
+        this.elapsedAttackFrame++;
+
+        if(this.elapsedAttackFrame < this.attackDelay) return;
+
+        this.velocity.x = 0;
+        this.switchSprite('meeleRight');
+    }
+
+    checkFinishAttack() {
+        if(this.animationType !== 'attack') return true;
+        if(this.animationType === 'attack' && this.currentAttack?.animationIsActive)
+            return false;
+        if(this.animationType === 'attack' && this.animationCompleted) {
+            this.elapsedAttackFrame = 0;
+            this.attackHitBox = null;
+            return true;
+        }
+
+        return false;
+    }
+
     switchSprite(name) {
         if(this.image === this.animations[name].image) return;
 
@@ -178,6 +229,8 @@ class BossDTO extends SpriteDTO {
         this.currentAnimation.isActive = false;
         this.animationCompleted = false;
         this.animationIsActive = true;
+        this.attackHitBoxFrames = this.animations[name]?.hitBoxFrames;
+        this.animationType = this.animations[name]?.type;
     }
 }
 

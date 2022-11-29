@@ -101,6 +101,7 @@ class SpriteDTO {
             } else {
                 this.animationCompleted = true;
                 this.animationIsActive = false;
+                this.currentAnimation.isActive = false;
             }
         }
 
