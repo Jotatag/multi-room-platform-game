@@ -4,6 +4,7 @@ class SpriteDTO {
     constructor({
         position,
         imageSrc,
+        verticalSrc,
         frameRate=1,
         animations,
         frameBuffer=12,
@@ -13,6 +14,7 @@ class SpriteDTO {
         this.position = position;
         this.image = new Image();
         this.image.src = imageSrc;
+        this.verticalSrc = verticalSrc;
         this.image.onload = () => this.onLoadSprite();
         this.loaded = false;
         this.frameRate = frameRate;
@@ -23,6 +25,9 @@ class SpriteDTO {
         this.loop = loop;
         this.autoplay = autoplay;
         this.currentAnimation = null;
+        this.cropBox = null;
+        this.animationCompleted = false;
+        this.animationIsActive = false;
 
         if(this.animations) {
             for(let key in this.animations) {
@@ -35,21 +40,13 @@ class SpriteDTO {
 
     draw() {
         if(!this.loaded) return;
-        const cropBox = {
-            position: {
-                x: this.width * this.currentFrame,
-                y: 0,
-            },
-            width: this.width,
-            height: this.height
-        }
-
+        this.updateCropBox();
         C.getCanvasContext().drawImage(
             this.image,
-            cropBox.position.x,
-            cropBox.position.y,
-            cropBox.width,
-            cropBox.height,
+            this.cropBox.position.x,
+            this.cropBox.position.y,
+            this.cropBox.width,
+            this.cropBox.height,
             this.position.x,
             this.position.y,
             this.width,
@@ -61,12 +58,33 @@ class SpriteDTO {
 
     onLoadSprite() {
         this.loaded = true;
-        this.width = this.image.width / this.frameRate;
-        this.height = this.image.height;
+        this.width = this.verticalSrc ? 
+                     this.image.width : 
+                     this.image.width / this.frameRate;
+        this.height = this.verticalSrc ? 
+                      this.image.height / this.frameRate : 
+                      this.image.height;
+    }
+
+    updateCropBox() {
+        this.cropBox = {
+            position: {
+                x: this.verticalSrc ? 
+                   0 : 
+                   this.width * this.currentFrame,
+                y: this.verticalSrc ? 
+                   this.height * this.currentFrame : 
+                   0
+            },
+            width: this.width,
+            height: this.height
+        }
     }
 
     play() {
         this.autoplay = true;
+        this.animationIsActive = true;
+        this.animationCompleted = false;
     }
 
     updateFrames() {
@@ -74,8 +92,16 @@ class SpriteDTO {
         this.elapsedFrames++;
 
         if(this.elapsedFrames % this.frameBuffer === 0) {
-            if(this.currentFrame < this.frameRate - 1) this.currentFrame++;
-            else if(this.loop) this.currentFrame = 0;
+            if(this.currentFrame < this.frameRate - 1) {
+                this.animationCompleted = false;
+                this.animationIsActive = true;
+                this.currentFrame++;
+            } else if(this.loop) { 
+                this.currentFrame = 0;
+            } else {
+                this.animationCompleted = true;
+                this.animationIsActive = false;
+            }
         }
 
         if(this.currentAnimation?.onComplete) {

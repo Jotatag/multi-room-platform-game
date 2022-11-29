@@ -1,4 +1,4 @@
-import { changeLevel, togglePreventInput, finishAttack } from './actions';
+import { changeLevel, togglePreventInput, finishAttack, beInvunerable } from './actions';
 
 import PlayerIdleRight from '../../assets/sprites/king/idle.png';
 import PlayerIdleLeft from '../../assets/sprites/king/idleLeft.png';
@@ -8,6 +8,8 @@ import PlayerEnterDoor from '../../assets/sprites/king/enterDoor.png';
 
 import PlayerAttackRight from '../../assets/sprites/king/attackRight.png';
 import PlayerAttackLeft from '../../assets/sprites/king/attackLeft.png';
+
+import InvunerableRight from '../../assets/sprites/king/invunerableRight.png'
 
 const playerAnimations = {
     idleRight: {
@@ -61,6 +63,15 @@ const playerAnimations = {
         onComplete: () => {
             togglePreventInput();
             finishAttack();
+        }
+    },
+    invunerableRight: {
+        frameRate: 11,
+        frameBuffer: 80,
+        loop: false,
+        imageSrc: InvunerableRight,
+        onComplete: () => {
+            beInvunerable(false);
         }
     }
 }

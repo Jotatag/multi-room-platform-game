@@ -13,15 +13,17 @@ export const changeLevel = () => {
         onComplete: () => {
             globalContext.currentLevel += 1;
             globalContext.currentLevelInstance = levels[globalContext.currentLevel];
-            gsap.to(overlay, {
-                opacity: 0
-            });
-            globalContext.currentPlayer.position.x = globalContext.currentLevelInstance.startingPosition.x;
-            globalContext.currentPlayer.position.y = globalContext.currentLevelInstance.startingPosition.y;
+            globalContext.currentPlayer.position.x = levels[globalContext.currentLevel].startingPosition.x;
+            globalContext.currentPlayer.position.y = levels[globalContext.currentLevel].startingPosition.y;
             globalContext.currentPlayer.collisionBlocks = levels[globalContext.currentLevel].collisionBlocks;
             globalContext.currentPlayer.switchSprite('idleRight');
-            globalContext.currentPlayer.currentLevel = globalContext.currentLevelInstance;
-            globalContext.currentPlayer.preventInput = false;
+            globalContext.currentPlayer.currentLevel = levels[globalContext.currentLevel];
+            gsap.to(overlay, {
+                opacity: 0,
+                onComplete: () => {
+                    globalContext.currentPlayer.preventInput = false;
+                }
+            });
         }
     });
 }
@@ -36,4 +38,11 @@ export const finishAttack = () => {
     if(!globalContext.currentPlayer) return;
 
     globalContext.currentPlayer.attackHitBox = null;
+}
+
+export const beInvunerable = (invunerable) => {
+    if(!globalContext.currentPlayer) return;
+    console.log(invunerable);
+
+    globalContext.currentPlayer.beInvunerable(invunerable);
 }

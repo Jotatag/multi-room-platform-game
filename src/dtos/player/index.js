@@ -61,6 +61,7 @@ class PlayerDTO extends SpriteDTO {
             'x': {
                 'action': 'grab-item',
                 'down': () => {
+                    if(this.currentAnimation.isActive || this.preventInput) return;
                     this.checkForItemCollision();
                 },
                 'up': () => {}
@@ -68,7 +69,7 @@ class PlayerDTO extends SpriteDTO {
             'z': {
                 'action': 'attack',
                 'down': () => {
-                    if(this.currentAnimation.isActive) return;
+                    if(this.currentAnimation.isActive || this.preventInput) return;
                     this.doAttack();
                     if(this.checkForAttackCollision()) {
                         console.log('atacou');
@@ -90,6 +91,13 @@ class PlayerDTO extends SpriteDTO {
         this.collisionBlocks = collisionBlocks;
         this.currentLevel = currentLevel;
         this.itens = itens;
+
+        this.currentBoss = null;
+
+        this.invunerable = false;
+
+        this.maxHealth = 3;
+        this.currentHealth = 3;
     }
 
     checkMovement() {
@@ -117,6 +125,11 @@ class PlayerDTO extends SpriteDTO {
 
         this.updateHitBox();
         this.checkForVerticalCollision();
+
+        if(this.currentLevel.bossRoom && this.currentBoss) {
+            this.updateHitBox();
+            this.checkForBossHorizontalCollision();
+        }
     }
 
     updateHitBox() {
@@ -128,8 +141,8 @@ class PlayerDTO extends SpriteDTO {
             width: 50,
             height: 55
         };
-        C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
-        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height);
+        /* C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
+        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height); */
     }
 
     updateAttackHitBox() {
@@ -241,21 +254,43 @@ class PlayerDTO extends SpriteDTO {
     }
 
     checkForAttackCollision() {
-        if(!this.attackHitBox) return false;
+        if(!this.attackHitBox || !this.currentLevel.bossRoom || !this.currentBoss) return false;
 
-        for(let i = 0; i < this.currentLevel.itens.length; i++){
-            const item = this.currentLevel.itens[i];
-            if(
-                this.attackHitBox.position.x <= item.position.x + item.width &&
-                this.attackHitBox.position.x + this.attackHitBox.width >= item.position.x &&
-                this.attackHitBox.position.y + this.attackHitBox.height >= item.position.y &&
-                this.attackHitBox.position.y <= item.position.y + item.height 
-            ) {
-                return true;
-            }
+        const boss = this.currentBoss.hitBox;
+        if(
+            this.attackHitBox.position.x <= boss.position.x + boss.width &&
+            this.attackHitBox.position.x + this.attackHitBox.width >= boss.position.x &&
+            this.attackHitBox.position.y + this.attackHitBox.height >= boss.position.y &&
+            this.attackHitBox.position.y <= boss.position.y + boss.height 
+        ) {
+            return true;
         }
 
         return false;
+    }
+
+    checkForBossHorizontalCollision() {
+        if(!this.currentLevel.bossRoom || !this.currentBoss) return;
+
+        const collisionBlock = this.currentBoss.hitBox;
+        if(
+            this.hitBox.position.x <= collisionBlock.position.x + collisionBlock.width &&
+            this.hitBox.position.x + this.hitBox.width >= collisionBlock.position.x &&
+            this.hitBox.position.y + this.hitBox.height >= collisionBlock.position.y &&
+            this.hitBox.position.y <= collisionBlock.position.y + collisionBlock.height
+        ) {
+            if(this.velocity.x < 0) {
+                const offSet = this.hitBox.position.x - this.position.x;
+                this.position.x = collisionBlock.position.x + collisionBlock.width - offSet + 0.01;
+                this.lostHealth(1);
+            }
+
+            if(this.velocity.x > 0) {
+                const offSet = this.hitBox.position.x - this.position.x + this.hitBox.width;
+                this.position.x = collisionBlock.position.x - offSet - 0.01;
+                this.lostHealth(1);
+            }
+        }
     }
 
     doAttack() {
@@ -264,6 +299,26 @@ class PlayerDTO extends SpriteDTO {
         this.updateAttackHitBox();
         if(this.lastDirection === 'left') this.switchSprite('attackLeft');
         else this.switchSprite('attackRight');
+    }
+
+    beInvunerable(invunerable) {
+        this.invunerable = invunerable;
+        if(!this.invunerable) {
+            this.preventInput = false;
+            return;
+        }
+
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+        this.preventInput = true;
+        this.switchSprite('invunerableRight');
+    }
+
+    lostHealth(value) {
+        if(this.invunerable) return;
+        this.currentHealth -= value;
+        this.beInvunerable(true);
+        console.log(this.currentHealth)
     }
 
     bindMovements() {
@@ -288,6 +343,7 @@ class PlayerDTO extends SpriteDTO {
         this.loop = this.animations[name].loop;
         this.currentAnimation = this.animations[name];
         this.currentAnimation.isActive = false;
+        if(this.invunerable) this.invunerable = false;
     }
 };
 

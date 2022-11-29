@@ -30,10 +30,14 @@ const Canvas = (props) => {
             globalContext.currentLevelInstance.drawItens();
             
             if(globalContext.currentLevelInstance.bossRoom) {
-                if(!levelBosses[globalContext.currentLevel].player)
-                    levelBosses[globalContext.currentLevel].player= globalContext.currentPlayer;
+                globalContext.currentPlayer.currentBoss = levelBosses[globalContext.currentLevel];
+                levelBosses[globalContext.currentLevel].player= globalContext.currentPlayer;
                 levelBosses[globalContext.currentLevel].checkMovement();
                 levelBosses[globalContext.currentLevel].draw();
+                if(levelBosses[globalContext.currentLevel].currentAttack) {
+                    levelBosses[globalContext.currentLevel].currentAttack.update();
+                    levelBosses[globalContext.currentLevel].currentAttack.draw();
+                }
                 levelBosses[globalContext.currentLevel].update();
             }
 

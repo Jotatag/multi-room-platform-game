@@ -13,7 +13,8 @@ class BossDTO extends SpriteDTO {
             frameRate,
             animations,
             loop,
-            player=null
+            player=null,
+            attackDelay=0
         }
     ) {
         super({ position, imageSrc, frameBuffer, frameRate, animations, loop });
@@ -38,11 +39,20 @@ class BossDTO extends SpriteDTO {
         this.currentLevel = currentLevel;
 
         this.player = player;
+
+        this.elapsedAttackFrame = 0;
+        this.attackDelay = attackDelay;
     }
 
     checkMovement() {
         if(!this.player) return;
         this.velocity.x = 0;
+
+        if(this.currentAnimation?.type === 'attack' 
+            && this.currentAttack?.animationIsActive) return;
+
+        if(this.player.position.y > 250) return this.doAttack();
+
         if(this.player.position.x >= (this.position.x + this.width / 2)) {
             this.switchSprite('idleRight');
             this.lastDirection = 'right';
@@ -79,8 +89,8 @@ class BossDTO extends SpriteDTO {
             width: 185,
             height: 150
         };
-        C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
-        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height);
+        /* C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
+        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height); */
     }
 
     checkForHorizontalCollision() {
@@ -133,6 +143,29 @@ class BossDTO extends SpriteDTO {
         }
     }
 
+    doAttack() {
+        if(!this.player) return;
+        this.elapsedAttackFrame++;
+
+        if(this.elapsedAttackFrame < this.attackDelay) return;
+
+        this.switchSprite('laserRight');
+        if(this.animationCompleted) {
+            if(this.currentAttack?.animationCompleted) {
+                this.switchSprite('idleRight');
+                this.currentAttack = null;
+                this.elapsedAttackFrame = 0;
+                return;
+            }
+
+            if(!this.currentAttack?.animationIsActive) {
+                this.currentAttack = this.animations.laserRight.attack;
+                if(!this.currentAttack.player) this.currentAttack.player = this.player;
+                this.currentAttack.play();
+            }
+        }
+    }
+
     switchSprite(name) {
         if(this.image === this.animations[name].image) return;
 
@@ -143,6 +176,8 @@ class BossDTO extends SpriteDTO {
         this.loop = this.animations[name].loop;
         this.currentAnimation = this.animations[name];
         this.currentAnimation.isActive = false;
+        this.animationCompleted = false;
+        this.animationIsActive = true;
     }
 }
 
