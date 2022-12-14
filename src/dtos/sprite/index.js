@@ -1,3 +1,4 @@
+import globalContext from '../../services/context';
 import C from '../../services/canvas';
 
 class SpriteDTO {
@@ -88,6 +89,7 @@ class SpriteDTO {
     }
 
     updateFrames() {
+        if(globalContext?.currentScreen?.name === 'pause') return;
         if (!this.autoplay) return;
         this.elapsedFrames++;
 
@@ -101,7 +103,6 @@ class SpriteDTO {
             } else {
                 this.animationCompleted = true;
                 this.animationIsActive = false;
-                this.currentAnimation.isActive = false;
             }
         }
 

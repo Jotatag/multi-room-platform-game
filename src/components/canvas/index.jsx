@@ -22,6 +22,8 @@ const Canvas = (props) => {
         globalContext.currentPlayer = Player();
         if(!globalContext.currentPlayer) return;
 
+        if(globalContext.currentScreen) globalContext.currentPlayer.preventInput = true;
+
         const animate = () => {
             window.requestAnimationFrame(animate);
             globalContext.currentLevelInstance.draw();
@@ -33,6 +35,7 @@ const Canvas = (props) => {
                 globalContext.currentPlayer.currentBoss = levelBosses[globalContext.currentLevel];
                 levelBosses[globalContext.currentLevel].player= globalContext.currentPlayer;
                 levelBosses[globalContext.currentLevel].checkMovement();
+                levelBosses[globalContext.currentLevel]?.gui.draw();
                 levelBosses[globalContext.currentLevel].draw();
                 if(levelBosses[globalContext.currentLevel].currentAttack) {
                     levelBosses[globalContext.currentLevel].currentAttack.update();
@@ -44,9 +47,14 @@ const Canvas = (props) => {
 
             globalContext.currentPlayer.checkMovement();
             globalContext.currentPlayer.draw();
+            globalContext.currentPlayer?.gui.draw();
             globalContext.currentPlayer.update();
 
             globalContext.currentLevelInstance.drawFrames();
+
+            if(globalContext.currentScreen) {
+                globalContext.currentScreen.instance.draw();
+            }
 
             C.getCanvasContext().save();
             C.getCanvasContext().globalAlpha = overlay.opacity;

@@ -1,9 +1,11 @@
+import globalContext from '../../services/context';
+
 import SpriteDTO from '../sprite';
+
 import { keyDown, keyUp } from '../../services/eventListeners';
 import switchCase from '../../utils/switchCase';
 
-import C from '../../services/canvas';
-
+import { gameOverTrigger } from '../../services/screens/triggers';
 class PlayerDTO extends SpriteDTO {
     constructor(
         { 
@@ -13,7 +15,10 @@ class PlayerDTO extends SpriteDTO {
             frameRate,
             animations,
             loop,
-            itens=[]
+            itens=[],
+            gui=null,
+            maxHealth=1,
+            currentHealth=1
         }
     ) {
         super({ imageSrc, frameRate, animations, loop });
@@ -39,6 +44,7 @@ class PlayerDTO extends SpriteDTO {
             'ArrowUp': {
                 'action': 'jump',
                 'down': () => {
+                    if (this.dead) return;
                     if (this.velocity.y !== 0) return;
                     if (this.preventInput) return;
                     if (this.checkForDoorCollision()) return;
@@ -61,7 +67,8 @@ class PlayerDTO extends SpriteDTO {
             'x': {
                 'action': 'grab-item',
                 'down': () => {
-                    if(this.currentAnimation.isActive || this.preventInput) return;
+                    if (this.dead) return;
+                    if(!this.currentAnimation || this.currentAnimation.isActive || this.preventInput) return;
                     this.checkForItemCollision();
                 },
                 'up': () => {}
@@ -69,10 +76,11 @@ class PlayerDTO extends SpriteDTO {
             'z': {
                 'action': 'attack',
                 'down': () => {
-                    if(this.currentAnimation.isActive || this.preventInput) return;
+                    if (this.dead) return;
+                    if(!this.currentAnimation || this.currentAnimation.isActive || this.preventInput) return;
                     this.doAttack();
                     if(this.checkForAttackCollision()) {
-                        console.log('atacou');
+                        this.currentBoss?.lostHealth(1);
                     }
                 },
                 'up': () => {}
@@ -96,11 +104,21 @@ class PlayerDTO extends SpriteDTO {
 
         this.invunerable = false;
 
-        this.maxHealth = 3;
-        this.currentHealth = 3;
+        this.maxHealth = maxHealth;
+        this.currentHealth = currentHealth;
+
+        this.gui = gui;
+        this.gui.currentFrame = this.currentHealth - 1;
+
+        this.dead = false;
     }
 
     checkMovement() {
+        if(this.dead) return;
+        if(globalContext?.currentScreen?.name === 'pause') {
+            this.velocity.x = 0;
+            return;
+        }
         if(this.preventInput) return;
         this.velocity.x = 0;
         if(this.movements.ArrowRight.pressed) {
@@ -118,6 +136,7 @@ class PlayerDTO extends SpriteDTO {
     }
 
     update() {
+        if(globalContext?.currentScreen?.name === 'pause') return;
         this.position.x += this.velocity.x;
         this.updateHitBox();
         this.checkForHorizontalCollision();
@@ -129,6 +148,7 @@ class PlayerDTO extends SpriteDTO {
         if(this.currentLevel.bossRoom && this.currentBoss) {
             this.updateHitBox();
             this.checkForBossHorizontalCollision();
+            this.checkForBossAttackCollision();
         }
     }
 
@@ -244,7 +264,8 @@ class PlayerDTO extends SpriteDTO {
                 this.hitBox.position.y <= item.position.y + item.height 
             ) {
                 const itemGrabbed = this.currentLevel.itens.splice(i, 1);
-                this.itens.push(itemGrabbed[0]);
+                if(itemGrabbed[0]?.type === 'life') this.gainHealth(1);
+                else this.itens.push(itemGrabbed[0]);
                 this.currentLevel.frame = itemGrabbed[0].frames[0];
                 return true;
             }
@@ -293,6 +314,22 @@ class PlayerDTO extends SpriteDTO {
         }
     }
 
+    checkForBossAttackCollision() {
+        if(!this.currentLevel.bossRoom || !this.currentBoss || !this.currentBoss?.attackHitBox) return;
+
+        const collisionBlock = this.currentBoss?.attackHitBox;
+        if(
+            this.hitBox.position.x <= collisionBlock.position.x + collisionBlock.width &&
+            this.hitBox.position.x + this.hitBox.width >= collisionBlock.position.x &&
+            this.hitBox.position.y + this.hitBox.height >= collisionBlock.position.y &&
+            this.hitBox.position.y <= collisionBlock.position.y + collisionBlock.height
+        ) {
+            const offSet = this.hitBox.position.x - this.position.x;
+            this.position.x = collisionBlock.position.x + collisionBlock.width - offSet + 0.01;
+            this.lostHealth(1);
+        }
+    }
+
     doAttack() {
         if(this.velocity.y === 0) this.velocity.x = 0;
         this.preventInput = true;
@@ -317,8 +354,18 @@ class PlayerDTO extends SpriteDTO {
     lostHealth(value) {
         if(this.invunerable) return;
         this.currentHealth -= value;
+        this.gui.currentFrame = this.currentHealth - 1;
+
+        if(this.currentHealth === 0) {
+            this.dead = true;
+            gameOverTrigger();
+        }
         this.beInvunerable(true);
-        console.log(this.currentHealth)
+    }
+
+    gainHealth(value) {
+        this.currentHealth += value;
+        this.gui.currentFrame = this.currentHealth - 1;
     }
 
     bindMovements() {
@@ -343,7 +390,7 @@ class PlayerDTO extends SpriteDTO {
         this.loop = this.animations[name].loop;
         this.currentAnimation = this.animations[name];
         this.currentAnimation.isActive = false;
-        if(this.invunerable) this.invunerable = false;
+        if(name !== 'invunerableRight') this.invunerable = false;
     }
 };
 

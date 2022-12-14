@@ -10,7 +10,8 @@ class ItemDTO extends SpriteDTO {
             frameBuffer,
             loop,
             autoplay,
-            frames=[]
+            frames=[],
+            type=null
         }
     ) {
         super({ 
@@ -23,6 +24,7 @@ class ItemDTO extends SpriteDTO {
         });
 
         this.frames = frames;
+        this.type = type;
     }
 
     drawCollision() {

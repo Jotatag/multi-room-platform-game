@@ -1,3 +1,4 @@
+import globalContext from '../../services/context';
 import C from '../../services/canvas';
 
 import SpriteDTO from '../sprite';
@@ -34,6 +35,8 @@ class AttackDTO extends SpriteDTO {
 
         this.hitBox = hitBox;
         this.originalHitbox = { ...this.hitBox };
+
+        this.animationIsActive = true;
     }
 
     onLoadSprite() {
@@ -87,6 +90,7 @@ class AttackDTO extends SpriteDTO {
     }
 
     updateFrames() {
+        if(globalContext?.currentScreen?.name === 'pause') return;
         if (!this.autoplay) return;
         this.elapsedFrames++;
 

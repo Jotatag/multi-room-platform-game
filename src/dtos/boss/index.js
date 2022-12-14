@@ -14,7 +14,10 @@ class BossDTO extends SpriteDTO {
             animations,
             loop,
             player=null,
-            attackDelay=0
+            attackDelay=0,
+            maxHealth=1,
+            currentHealth=1,
+            gui=null
         }
     ) {
         super({ position, imageSrc, frameBuffer, frameRate, animations, loop });
@@ -47,13 +50,17 @@ class BossDTO extends SpriteDTO {
 
         this.attackAnimationIsActive = false;
         this.animationType = 'neutral';
+
+        this.maxHealth = maxHealth;
+        this.currentHealth = currentHealth;
+
+        this.gui = gui;
+        this.gui.currentFrame = this.currentHealth - 2;
     }
 
     checkMovement() {
         if(!this.player) return;
         this.velocity.x = 0;
-
-        console.log(this.checkFinishAttack())
 
         if(!this.checkFinishAttack()) return;
 
@@ -81,6 +88,7 @@ class BossDTO extends SpriteDTO {
         this.checkForVerticalCollision();
 
         if(this.attackHitBoxFrames?.includes(this.currentFrame)) this.updateAttackHitBox();
+        else this.attackHitBox = null;
     }
 
     updateAttackHitBox() {
@@ -88,10 +96,10 @@ class BossDTO extends SpriteDTO {
             position: {
                 x: this.lastDirection === 'left' ? 
                    this.hitBox.position.x - 45 : 
-                   this.hitBox.position.x + this.hitBox.width,
+                   this.hitBox.position.x + this.hitBox.width - 20,
                 y: this.hitBox.position.y + 50
             },
-            width: 35,
+            width: 50,
             height: this.hitBox.height - 50
         }
     }
@@ -116,8 +124,8 @@ class BossDTO extends SpriteDTO {
             width: 170,
             height: 150
         };
-        C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
-        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height);
+        /* C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
+        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height); */
     }
 
     checkForHorizontalCollision() {
@@ -176,13 +184,24 @@ class BossDTO extends SpriteDTO {
 
         if(this.elapsedAttackFrame < this.attackDelay) return;
 
+        if(this.attackAnimationIsActive) {
+            this.doRangeAttack();
+            return;
+        }
+
+        const randomAttack = Math.floor(Math.random() * 2);
+
+        if(randomAttack === 0) this.doRangeAttack();
+        else this.doMeeleAttack();
+    }
+
+    doRangeAttack() {
         this.switchSprite('laserRight');
+        this.attackAnimationIsActive = true;
+        
         if(this.animationCompleted) {
-            console.log('dad')
             if(this.currentAttack?.animationCompleted) {
-                this.switchSprite('idleRight');
-                this.currentAttack = null;
-                this.elapsedAttackFrame = 0;
+                this.attackAnimationIsActive = false;
                 return;
             }
 
@@ -195,26 +214,29 @@ class BossDTO extends SpriteDTO {
     }
 
     doMeeleAttack() {
-        if(!this.player) return;
-        this.elapsedAttackFrame++;
-
-        if(this.elapsedAttackFrame < this.attackDelay) return;
-
         this.velocity.x = 0;
         this.switchSprite('meeleRight');
     }
 
     checkFinishAttack() {
         if(this.animationType !== 'attack') return true;
-        if(this.animationType === 'attack' && this.currentAttack?.animationIsActive)
+        if(this.attackAnimationIsActive) return true;
+        if(this.currentAttack?.animationIsActive)
             return false;
-        if(this.animationType === 'attack' && this.animationCompleted) {
-            this.elapsedAttackFrame = 0;
+        if(this.animationCompleted) {
+            this.switchSprite('idleRight');
+            this.currentAttack = null;
             this.attackHitBox = null;
+            this.elapsedAttackFrame = 0;
             return true;
         }
 
         return false;
+    }
+
+    lostHealth(value) {
+        this.currentHealth -= value;
+        this.gui.currentFrame = this.currentHealth - 2;
     }
 
     switchSprite(name) {
