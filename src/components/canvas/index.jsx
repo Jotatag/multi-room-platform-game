@@ -27,7 +27,6 @@ const Canvas = (props) => {
         const animate = () => {
             window.requestAnimationFrame(animate);
             globalContext.currentLevelInstance.draw();
-            globalContext.currentLevelInstance.drawCollisions();
             globalContext.currentLevelInstance.drawDoors();
             globalContext.currentLevelInstance.drawItens();
             
@@ -42,7 +41,6 @@ const Canvas = (props) => {
                     levelBosses[globalContext.currentLevel].currentAttack.draw();
                 }
                 levelBosses[globalContext.currentLevel].update();
-                levelBosses[globalContext.currentLevel].drawAttackHitBox();
             }
 
             globalContext.currentPlayer.checkMovement();

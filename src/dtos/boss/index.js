@@ -2,6 +2,8 @@ import C from '../../services/canvas';
 
 import SpriteDTO from '../sprite';
 
+import { clearTrigger } from '../../services/screens/triggers';
+
 class BossDTO extends SpriteDTO {
     constructor(
         { 
@@ -56,9 +58,12 @@ class BossDTO extends SpriteDTO {
 
         this.gui = gui;
         this.gui.currentFrame = this.currentHealth - 2;
+        this.dead = false;
     }
 
     checkMovement() {
+        if(this.dead && this.animationCompleted) return clearTrigger();
+        if(this.dead) return;
         if(!this.player) return;
         this.velocity.x = 0;
 
@@ -237,6 +242,11 @@ class BossDTO extends SpriteDTO {
     lostHealth(value) {
         this.currentHealth -= value;
         this.gui.currentFrame = this.currentHealth - 2;
+
+        if(this.currentHealth === 1) {
+            this.switchSprite('dead');
+            this.dead = true;
+        }
     }
 
     switchSprite(name) {

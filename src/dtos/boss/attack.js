@@ -1,5 +1,4 @@
 import globalContext from '../../services/context';
-import C from '../../services/canvas';
 
 import SpriteDTO from '../sprite';
 
@@ -81,12 +80,6 @@ class AttackDTO extends SpriteDTO {
 
     update() {
         this.checkForPlayerHorizontalCollision();
-        this.updateHitBox();
-    }
-
-    updateHitBox() {
-        C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
-        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height);
     }
 
     updateFrames() {

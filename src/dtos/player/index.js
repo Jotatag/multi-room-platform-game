@@ -303,13 +303,13 @@ class PlayerDTO extends SpriteDTO {
             if(this.velocity.x < 0) {
                 const offSet = this.hitBox.position.x - this.position.x;
                 this.position.x = collisionBlock.position.x + collisionBlock.width - offSet + 0.01;
-                this.lostHealth(1);
+                if(!this.currentBoss.dead) this.lostHealth(1);
             }
 
             if(this.velocity.x > 0) {
                 const offSet = this.hitBox.position.x - this.position.x + this.hitBox.width;
                 this.position.x = collisionBlock.position.x - offSet - 0.01;
-                this.lostHealth(1);
+                if(!this.currentBoss.dead) this.lostHealth(1);
             }
         }
     }

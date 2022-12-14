@@ -15,6 +15,8 @@ import AttackMeeleRight from '../../assets/sprites/boss/golem/attack/meeleRight2
 
 import BossLife from '../../assets/sprites/boss/golem/life.png';
 
+import BossDead from '../../assets/sprites/boss/golem/dead.png';
+
 const bossAnimations = {
     idleRight: {
         frameRate: 4,
@@ -71,6 +73,13 @@ const bossAnimations = {
             },
             speed: 40
         })
+    },
+    dead: {
+        frameRate: 14,
+        frameBuffer: 100,
+        loop: false,
+        type: 'neutral',
+        imageSrc: BossDead
     }
 }
 
@@ -80,8 +89,8 @@ const currentHealth = 6;
 const BossGui = new GuiDTO(
     {
         position: {
-            x: 55,
-            y: 2
+            x: 80,
+            y: 10
         },
         imageSrc: BossLife,
         frameRate: maxHealth - 1
@@ -100,7 +109,7 @@ const EarthGolem = new BossDTO({
     frameBuffer: 200,
     loop: true,
     animations: bossAnimations,
-    attackDelay: 1000,
+    attackDelay: 800,
     maxHealth: maxHealth,
     currentHealth: currentHealth,
     gui: BossGui

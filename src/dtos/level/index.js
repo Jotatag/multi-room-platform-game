@@ -52,7 +52,6 @@ class LevelDTO extends SpriteDTO {
     drawItens() {
         this.itens.forEach((item) => {
             item.draw();
-            item.drawCollision();
         });
     }
 };

@@ -42,7 +42,6 @@ export const finishAttack = () => {
 
 export const beInvunerable = (invunerable) => {
     if(!globalContext.currentPlayer) return;
-    console.log(invunerable);
 
     globalContext.currentPlayer.beInvunerable(invunerable);
 }
