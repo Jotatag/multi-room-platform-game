@@ -41,7 +41,7 @@ class PlayerDTO extends SpriteDTO {
         this.lastDirection = 'right';
 
         this.movements = {
-            'ArrowUp': {
+            'arrowup': {
                 'action': 'jump',
                 'down': () => {
                     if (this.dead) return;
@@ -52,17 +52,17 @@ class PlayerDTO extends SpriteDTO {
                 },
                 'up': () => {}
             },
-            'ArrowLeft': {
+            'arrowleft': {
                 'action': 'left',
                 'pressed': false,
-                'down': () => { this.movements.ArrowLeft.pressed = true },
-                'up': () => { this.movements.ArrowLeft.pressed = false }
+                'down': () => { this.movements.arrowleft.pressed = true },
+                'up': () => { this.movements.arrowleft.pressed = false }
             },
-            'ArrowRight': {
+            'arrowright': {
                 'action': 'right',
                 'pressed': false,
-                'down': () => { this.movements.ArrowRight.pressed = true },
-                'up': () => { this.movements.ArrowRight.pressed = false }
+                'down': () => { this.movements.arrowright.pressed = true },
+                'up': () => { this.movements.arrowright.pressed = false }
             },
             'x': {
                 'action': 'grab-item',
@@ -121,11 +121,11 @@ class PlayerDTO extends SpriteDTO {
         }
         if(this.preventInput) return;
         this.velocity.x = 0;
-        if(this.movements.ArrowRight.pressed) {
+        if(this.movements.arrowright.pressed) {
             this.switchSprite('runRight');
             this.velocity.x = Math.abs(this.runSpeed);
             this.lastDirection = 'right';
-        } else if(this.movements.ArrowLeft.pressed) {
+        } else if(this.movements.arrowleft.pressed) {
             this.switchSprite('runLeft');
             this.velocity.x = -Math.abs(this.runSpeed);
             this.lastDirection = 'left';
@@ -161,8 +161,6 @@ class PlayerDTO extends SpriteDTO {
             width: 50,
             height: 55
         };
-        /* C.getCanvasContext().fillStyle = 'rgb(0, 255, 0, 0.5)';
-        C.getCanvasContext().fillRect(this.hitBox.position.x, this.hitBox.position.y, this.hitBox.width, this.hitBox.height); */
     }
 
     updateAttackHitBox() {
@@ -372,11 +370,11 @@ class PlayerDTO extends SpriteDTO {
         const getKey = switchCase(this.movements);
 
         keyDown((key) => {
-            getKey(key).down();
+            getKey(key.toLowerCase()).down();
         });
 
         keyUp((key) => {
-            getKey(key).up();
+            getKey(key.toLowerCase()).up();
         });
     }
 
