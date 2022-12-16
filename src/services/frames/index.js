@@ -14,7 +14,7 @@ const frames = {
         imageSrc: WeaponFrame,
         autoplay: false,
         loop: false,
-        frameBuffer: 2.5,
+        frameBuffer: 1,
         animation: frameAnimations.up
     }),
     lifeAcquired: new FrameDTO({
@@ -25,7 +25,7 @@ const frames = {
         imageSrc: LifeFrame,
         autoplay: false,
         loop: false,
-        frameBuffer: 2.5,
+        frameBuffer: 2,
         animation: frameAnimations.up
     })
 };

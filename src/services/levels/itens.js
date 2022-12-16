@@ -2,7 +2,6 @@ import ItemDTO from '../../dtos/item';
 
 import frames from '../frames';
 
-import HammerSprite from '../../assets/sprites/hammer.png'
 import LifeSprite from '../../assets/sprites/life.png';
 
 const levelItens = {
@@ -16,7 +15,7 @@ const levelItens = {
                 },
                 imageSrc: LifeSprite,
                 frameRate: 2,
-                frameBuffer: 250,
+                frameBuffer: 150,
                 loop: true,
                 autoplay: true,
                 frames: [frames.lifeAcquired],

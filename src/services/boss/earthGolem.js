@@ -20,21 +20,21 @@ import BossDead from '../../assets/sprites/boss/golem/dead.png';
 const bossAnimations = {
     idleRight: {
         frameRate: 4,
-        frameBuffer: 200,
+        frameBuffer: 100,
         loop: true,
         type: 'neutral',
         imageSrc: GolemIdleRight
     },
     idleLeft: {
         frameRate: 4,
-        frameBuffer: 200,
+        frameBuffer: 100,
         loop: true,
         type: 'neutral',
         imageSrc: GolemIdleLeft
     },
     meeleRight: {
         frameRate: 10,
-        frameBuffer: 100,
+        frameBuffer: 30,
         loop: false,
         type: 'attack',
         imageSrc: AttackMeeleRight,
@@ -44,7 +44,7 @@ const bossAnimations = {
     },
     laserRight: {
         frameRate: 6,
-        frameBuffer: 100,
+        frameBuffer: 30,
         loop: false,
         imageSrc: GolemLaserRight,
         type: 'attack',
@@ -60,7 +60,7 @@ const bossAnimations = {
             currentLevel: levels[3],
             imageSrc: AttackLaserRight,
             verticalSrc: true,
-            frameBuffer: 25,
+            frameBuffer: 15,
             frameRate: 10,
             loop: false,
             hitBox: {
@@ -76,7 +76,7 @@ const bossAnimations = {
     },
     dead: {
         frameRate: 14,
-        frameBuffer: 100,
+        frameBuffer: 30,
         loop: false,
         type: 'neutral',
         imageSrc: BossDead
@@ -106,10 +106,10 @@ const EarthGolem = new BossDTO({
     currentLevel: levels[3],
     imageSrc: GolemIdleRight,
     frameRate: 4,
-    frameBuffer: 200,
+    frameBuffer: 100,
     loop: true,
     animations: bossAnimations,
-    attackDelay: 800,
+    attackDelay: 600,
     maxHealth: maxHealth,
     currentHealth: currentHealth,
     gui: BossGui
