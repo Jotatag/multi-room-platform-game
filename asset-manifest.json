@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "/multi-room-platform-game/static/css/main.e6c13ad2.css",
+    "main.js": "/multi-room-platform-game/static/js/main.c11da4ce.js",
+    "static/media/dead.png": "/multi-room-platform-game/static/media/dead.6f726b9366855b12292e.png",
+    "static/media/initial.png": "/multi-room-platform-game/static/media/initial.2a07f3ac8f2b8f1902eb.png",
+    "static/media/meeleRight2.png": "/multi-room-platform-game/static/media/meeleRight2.e21225a55c6652bc1dc0.png",
+    "static/media/laserRight.png": "/multi-room-platform-game/static/media/laserRight.a22807589c2d81e280fd.png",
+    "static/media/idleLeft.png": "/multi-room-platform-game/static/media/idleLeft.c9d10b00ac388a568154.png",
+    "static/media/idleRight.png": "/multi-room-platform-game/static/media/idleRight.9ad489941ba55743c07e.png",
+    "static/media/backgroundLevel2.png": "/multi-room-platform-game/static/media/backgroundLevel2.42d8b68bac4b6e9d8bdb.png",
+    "static/media/backgroundLevel3.png": "/multi-room-platform-game/static/media/backgroundLevel3.360a52009bcc81590568.png",
+    "static/media/backgroundLevel1.png": "/multi-room-platform-game/static/media/backgroundLevel1.9a19cac509dd35486283.png",
+    "static/media/attackLeft.png": "/multi-room-platform-game/static/media/attackLeft.9e9ee9f852c68c4a290a.png",
+    "static/media/attackRight.png": "/multi-room-platform-game/static/media/attackRight.8f5582e208f6de04a9ea.png",
+    "static/media/enterDoor.png": "/multi-room-platform-game/static/media/enterDoor.14ed4761261adb70da66.png",
+    "static/media/doorOpen.png": "/multi-room-platform-game/static/media/doorOpen.8f2d01fc2a42da0b4988.png",
+    "static/media/runRight.png": "/multi-room-platform-game/static/media/runRight.c99cc96afd2f063c2973.png",
+    "static/media/runLeft.png": "/multi-room-platform-game/static/media/runLeft.7164213b6b40ff25c4ff.png",
+    "static/media/invunerableRight.png": "/multi-room-platform-game/static/media/invunerableRight.77db0bd45dff5008a196.png",
+    "static/media/idle.png": "/multi-room-platform-game/static/media/idle.06baa01b819edb80fb0b.png",
+    "static/media/clear.png": "/multi-room-platform-game/static/media/clear.7425caaa3df9d555961b.png",
+    "static/media/gameOver.png": "/multi-room-platform-game/static/media/gameOver.e147f4744bfc7db00e10.png",
+    "index.html": "/multi-room-platform-game/index.html",
+    "main.e6c13ad2.css.map": "/multi-room-platform-game/static/css/main.e6c13ad2.css.map",
+    "main.c11da4ce.js.map": "/multi-room-platform-game/static/js/main.c11da4ce.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.c11da4ce.js"
+  ]
+}
