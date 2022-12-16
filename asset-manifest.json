@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/multi-room-platform-game/static/css/main.e6c13ad2.css",
-    "main.js": "/multi-room-platform-game/static/js/main.ac6638df.js",
+    "main.js": "/multi-room-platform-game/static/js/main.2d5ffcf6.js",
     "static/media/dead.png": "/multi-room-platform-game/static/media/dead.6f726b9366855b12292e.png",
     "static/media/initial.png": "/multi-room-platform-game/static/media/initial.2a07f3ac8f2b8f1902eb.png",
     "static/media/meeleRight2.png": "/multi-room-platform-game/static/media/meeleRight2.e21225a55c6652bc1dc0.png",
@@ -23,10 +23,10 @@
     "static/media/gameOver.png": "/multi-room-platform-game/static/media/gameOver.e147f4744bfc7db00e10.png",
     "index.html": "/multi-room-platform-game/index.html",
     "main.e6c13ad2.css.map": "/multi-room-platform-game/static/css/main.e6c13ad2.css.map",
-    "main.ac6638df.js.map": "/multi-room-platform-game/static/js/main.ac6638df.js.map"
+    "main.2d5ffcf6.js.map": "/multi-room-platform-game/static/js/main.2d5ffcf6.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.ac6638df.js"
+    "static/js/main.2d5ffcf6.js"
   ]
 }
